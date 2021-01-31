@@ -1,0 +1,31 @@
+// stylelint-disable declaration-no-important
+
+// Typography
+
+@mixin text-emphasis-variant($parent, $color) {
+  #{$parent} {
+    color: $color !important;
+  }
+  a#{$parent} {
+    @include hover-focus {
+      color: darken($color, 10%) !important;
+    }
+  }
+}
+// CSS image replacement
+@mixin text-hide() {
+  // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+// Text truncate
+// Requires inline-block or block for proper styling
+
+@mixin text-truncate() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

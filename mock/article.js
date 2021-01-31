@@ -30,7 +30,7 @@ for (let i = 0; i < count; i++) {
 module.exports = [
   {
     url: '/cmsadmin/article/list',
-    type: 'get',
+    type: 'post',
     response: config => {
       const { importance, type, title, page = 1, limit = 20, sort } = config.query
 

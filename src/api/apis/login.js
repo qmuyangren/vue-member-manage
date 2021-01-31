@@ -1,12 +1,9 @@
 import axios from '../axios'
-import userUrls from '../urls/user'
-import { desEncrypt } from '@/utils'
+import userUrls from '../urls/login'
 
 export default {
   // 登录
   fetchLogin(data) {
-    data.password = desEncrypt(data.password)
-    console.log(data)
     return axios.post(userUrls.login, data)
   },
   // 获取用户基本信息

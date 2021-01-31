@@ -1,7 +1,13 @@
 import Vue from 'vue'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import './assets/sass/index.scss'
+import Cookies from 'js-cookie'
+import 'normalize.css/normalize.css' // a modern alternative to CSS resets
+
+import Element from 'element-ui'
+// import 'element-ui/lib/theme-chalk/index.css'
+// import './assets/theme/element-variables.scss'
+import enLang from 'element-ui/lib/locale/lang/en'// 如果使用中文语言包请默认支持，无需额外引入，请删除该依
+// import './assets/sass/index.scss'
+import './assets/theme/index.scss' // global css
 import i18n from './i18n'
 import App from './App.vue'
 import router from './router'
@@ -9,27 +15,31 @@ import store from './store'
 
 import '@/router/permission'
 import globalUtil from './utils/global'
-// import './assets/icon'
 import 'babel-polyfill'
 import '@/components/index'
 import './assets/icon'
-import '../mock'
+
+Vue.use(Element, {
+  size: Cookies.get('size') || 'medium', // set element-ui default size
+  locale: enLang // 如果使用中文，无需设置，请删除
+})
+
+Vue.use(globalUtil)
+Vue.config.productionTip = false
+
 /**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online ! ! !
+*如果您不想使用模拟服务器1
+*你想使用MockJs来模拟api
+*你可以执行:mockXHR()
+*
+*目前MockJs将在生产环境中使用，
+*请在上网前删除它!!!
  */
+// 通过环境变量来判断是否需要加载启用
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
-Vue.use(ElementUI)
-Vue.use(globalUtil)
-Vue.config.productionTip = false
-
 new Vue({
   router,
   store,

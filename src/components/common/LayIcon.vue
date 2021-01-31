@@ -9,7 +9,7 @@
 import { isExternal } from '@/utils/validate'
 
 export default {
-  name: 'HdIcon',
+  name: 'LayIcon',
   props: {
     iconClass: {
       type: String,
@@ -29,9 +29,9 @@ export default {
     },
     svgClass() {
       if (this.className) {
-        return this.iconClass + ' hd-svg-icon ' + this.className
+        return this.iconClass + ' lay-svg-icon ' + this.className
       } else {
-        return this.iconClass + ' hd-svg-icon'
+        return this.iconClass + ' lay-svg-icon'
       }
     },
     styleExternalIcon() {
@@ -45,16 +45,16 @@ export default {
 </script>
 
 <style scoped>
-.hd-svg-icon {
+.lay-svg-icon {
   width: 1em;
   height: 1em;
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
-  font-size: 16px;
+  font-size: 14px;
 }
 
-.hd-svg-external-icon {
+.lay-svg-external-icon {
   background-color: currentColor;
   mask-size: cover!important;
   display: inline-block;

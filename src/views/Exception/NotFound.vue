@@ -1,12 +1,12 @@
 <template>
   <section class="not-found-container">
-    <!-- <img src="../../assets/img/404.png" alt=""> -->
+    <img src="../../assets/images/404.svg" alt="">
     <div class="btn-wrap">
       <el-button type="primary" size="medium" @click="handleClick">
-        <jee-icon icon-class="fanhui" />返回上一页
+        <lay-icon icon-class="fanhui" />返回上一页
       </el-button>
       <el-button type="primary" size="medium" @click="handleLogin">
-        <jee-icon icon-class="fanhui" />重新登录
+        <lay-icon icon-class="fanhui" />重新登录
       </el-button>
     </div>
   </section>

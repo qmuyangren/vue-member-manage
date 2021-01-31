@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js'
 
-const encryptKey = 'WfJTKO9S4eLkrPz2JKrAnzdb'
-const encryptIV = 'D076D35C'
+const encryptKey = 'WfJTKO9S4eLkrPz3JKrAnzdb'
+const encryptIV = 'D076D45C'
 
 // 3DES加密
 export function desEncrypt(str, key = encryptKey, iv = encryptIV) {

@@ -3,7 +3,8 @@ import qs from 'qs'
 import { Message } from 'element-ui'
 import router from '@/router'
 
-const tokenKey = 'JEECMS-Auth-Token'
+const tokenKey = 'HDGSCMS-Auth-Token'
+// console.log(process.env.VUE_APP_API_PREFIX)
 const request = axios.create({
   baseURL: process.env.VUE_APP_API_PREFIX,
   timeout: 50000,
@@ -39,7 +40,7 @@ request.interceptors.request.use(config => {
   }
   return config
 }, error => {
-  console.log(error)
+  // console.log(error)
   return Promise.reject(error)
 })
 

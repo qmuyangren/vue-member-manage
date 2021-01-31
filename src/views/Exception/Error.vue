@@ -1,9 +1,9 @@
 <template>
   <section class="error-container">
-    <!-- <img src="../../assets/img/500.png" alt=""> -->
+    <img src="../../assets/images/500.svg" alt="">
     <div class="btn-wrap">
       <el-button type="primary" size="medium" @click="handleClick">
-        <jee-icon icon-class="fanhui" />返回上一页
+        <lay-icon icon-class="fanhui" />返回上一页
       </el-button>
     </div>
   </section>

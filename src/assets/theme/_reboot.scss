@@ -1,0 +1,70 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box; // 1
+}
+
+html {
+  font-family: sans-serif; // 2
+  line-height: 1.15; // 3
+  -webkit-text-size-adjust: 100%; // 4
+  -ms-text-size-adjust: 100%; // 4
+  -ms-overflow-style: scrollbar; // 5
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); // 6
+}
+
+// stylelint-disable selector-list-comma-newline-after
+// Shim for "new" HTML5 structural elements to display correctly (IE10, older browsers)
+article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, section {
+  display: block;
+}
+
+body {
+  margin: 0; // 1
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-base;
+  line-height: $line-height-base;
+  //color: $body-color;
+  color: rgba(0, 0, 0, 0.65);
+  text-align: left; // 3
+  background-color: $body-bg; // 2
+}
+
+
+
+//
+// Links
+//
+
+a {
+  color: $link-color;
+  text-decoration: $link-decoration;
+  background-color: transparent; // Remove the gray background on active links in IE 10.
+  -webkit-text-decoration-skip: objects; // Remove gaps in links underline in iOS 8+ and Safari 8+.
+
+  @include hover {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+}
+
+
+
+// 改写滚动条 火狐本身没办法通过CSS来自定义滚动条，除非通过一些JS库来模拟
+::-webkit-scrollbar-track-piece { //滚动条凹槽的颜色，还可以设置边框属性
+  background-color:#f8f8f8;
+}
+::-webkit-scrollbar {//滚动条的宽度
+  width:9px;
+  height:9px;
+}
+::-webkit-scrollbar-thumb {//滚动条的设置
+  background-color:#ddd;
+  background-clip:padding-box;
+  min-height:28px;
+  border-radius: 14px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color:#bbb;
+}
