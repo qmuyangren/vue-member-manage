@@ -31,10 +31,8 @@ export default {
   display: inline-block;
   height: 100%;
   >.el-badge{
-    vertical-align: top;
-    line-height: 24px;
     .el-badge__content.is-fixed{
-      top: 0px;
+      top: 12px;
     }
   }
 }

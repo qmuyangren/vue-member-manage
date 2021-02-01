@@ -1,13 +1,19 @@
 <template>
-  <el-color-picker
+  <!-- <el-color-picker
     v-model="theme"
     :predefine="['#409EFF', '#1890ff', '#304156','#212121','#11a983', '#13c2c2', '#6959CD', '#f5222d', ]"
     class="theme-picker"
     popper-class="theme-picker-dropdown"
-  />
+  /> -->
+  <div class="d-flex">
+    <div v-for="item in colorList" :key="item" class="color-item rounded" :index="item" :style="{ backgroundColor: item }" @click="setColor(item)">
+      <i v-if="item == themeSet.primaryColor" class="el-icon el-icon-check text-white" />
+    </div>
+  </div>
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex'
 const version = require('element-ui/package.json').version // element-ui version from node_modules
 const ORIGINAL_THEME = '#409EFF' // default color
 
@@ -19,6 +25,8 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['themeSet']),
+    ...mapState('app', ['colorList']),
     defaultTheme() {
       return this.$store.state.app.theme
     }
@@ -85,8 +93,13 @@ export default {
       $message.close()
     }
   },
-
   methods: {
+    setColor: function(item) {
+      if (this.themeSet.primaryColor !== item) {
+        this.theme = item
+        this.$store.dispatch('app/changeThemeSet', ['primaryColor', item])
+      }
+    },
     updateStyle(style, oldCluster, newCluster) {
       let newStyle = style
       oldCluster.forEach((color, index) => {

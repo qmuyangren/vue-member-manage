@@ -35,7 +35,23 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar', 'themeSet'
-    ])
+    ]),
+    navTheme() {
+      if (this.themeSet.navTheme === 'dark' || this.themeSet.layout === 'topmenu') {
+        return 1
+      } else {
+        return 0
+      }
+    }
+  },
+  watch: {
+    navTheme(n) {
+      var bodyEle = document.getElementsByTagName('body')[0]
+      bodyEle.setAttribute('class', '')
+      if (n) {
+        bodyEle.setAttribute('class', 'lay-dark')
+      }
+    }
   },
   mounted() {},
   methods: {

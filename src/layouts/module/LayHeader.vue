@@ -1,6 +1,6 @@
 <template>
-  <el-header class="lay-header" :height="height">
-    <div class="lay-header-main" :class="setHeaerClass()">
+  <el-header class="lay-header" :height="height" :style="setHeaerStyle()">
+    <div class="lay-header-main" :class="setHeaerClass()" :style="setHeaerStyle()">
       <div v-if="themeSet.layout === 'topmenu'" class="lay-header-logo d-flex">
         <router-link to="/"><img src="../../assets/logo.svg"> <h1>{{ title }}</h1></router-link>
       </div>
@@ -52,11 +52,11 @@ export default {
     const that = this
     window.onresize = () => {
       return (() => {
-        window.fullWidth = document.documentElement.clientWidth
         // that.fullWidth = window.fullWidth
         // console.log(this.$refs['lay-header-nav'].offsetWidth)
         // console.log(this.$refs['lay-header-nav'].firstElementChild.childNodes)
-        if (window.fullWidth >= 768) {
+        if (window.fullWidth >= 768 && this.themeSet.layout === 'topmenu') {
+          window.fullWidth = document.documentElement.clientWidth
           const nodes = this.$refs['lay-header-nav'].firstElementChild.childNodes
           const nodesW = []
           const domWidth = this.$refs['lay-header-nav'].offsetWidth
@@ -88,7 +88,13 @@ export default {
       const className = []
       if (this.themeSet.layout === 'topmenu') { className.push('lay-header-dark') }
       if (this.themeSet.fixedHeader === true) { className.push('lay-header-fixed') }
+      if (this.sidebar.opened) { className.push('lay-header-has') }
       return className
+    },
+    setHeaerStyle() {
+      return {
+        'width': this.themeSet.layout === 'topmenu' ? '100%' : this.sidebar.opened ? 'calc(100% - 72px)' : 'calc(100% - 208px)'
+      }
     }
   }
 }
@@ -101,11 +107,26 @@ $drawer: 'lay-header';
   .#{$drawer}-main{
     position: relative;
     display: flex;
+    z-index: 11;
     align-items: center;
     height: 100%;
-    padding: 0 16px;
+    padding: 0 0px;
     background: #fff;
     box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    &.lay-header-fixed{
+      position: fixed;
+      top: 0;
+      right: 0px;
+      height: 48px;
+      line-height: 48px;
+    }
+    &.lay-header-has{
+      position: fixed;
+      top: 0;
+      right: 0px;
+      height: 48px;
+      line-height: 48px;
+    }
   }
   .#{$drawer}-logo{
     min-width: 192px;
@@ -152,6 +173,7 @@ $drawer: 'lay-header';
     display: flex;
     align-items: center;
     height: 100%;
+    min-width: 260px;
   }
   .#{$drawer}-aside, .#{$drawer}-search, .#{$drawer}-notice,.#{$drawer}-lang,.#{$drawer}-user,.#{$drawer}-size{
     cursor: pointer;
@@ -218,10 +240,6 @@ $drawer: 'lay-header';
         }
       }
     }
-  }
-  .lay-header-fixed{
-    position: fixed;
-    top: 0;
   }
 }
 </style>

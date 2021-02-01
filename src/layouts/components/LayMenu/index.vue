@@ -1,11 +1,10 @@
 <template>
   <el-menu
     :mode="mode"
+    class="dark"
     :default-active="activeMenu"
     :collapse="isCollapse"
     :background-color="backColor"
-    :text-color="textColor"
-    :active-text-color="activeColor"
     @select="handleSelect"
   >
     <menu-item :menu-data="dataTree" />
@@ -37,10 +36,10 @@ export default {
   },
   data() {
     return {
-      dataTree: [],
-      backColor: '',
-      textColor: '',
-      activeColor: ''
+      dataTree: []
+      // backColor: '',
+      // textColor: '',
+      // activeColor: ''
     }
   },
   computed: {
@@ -57,6 +56,13 @@ export default {
     },
     isCollapse() {
       return this.sidebar.opened
+    },
+    backColor() {
+      if (this.themeSet.navTheme === 'dark' || this.themeSet.layout === 'topmenu') {
+        return '#001529'
+      } else {
+        return '#FFFFFF'
+      }
     }
   },
   watch: {
@@ -67,11 +73,6 @@ export default {
     }
   },
   created() {
-    if (this.themeSet.navTheme === 'dark' || this.themeSet.layout === 'topmenu') {
-      this.backColor = '#001529'
-      this.textColor = '#d6d6d6'
-      this.activeColor = '#fff'
-    }
     // console.log(this.addRoutes)
     // 导航模式，是顶部显示，还是在侧边显示
     // 如果在顶部显示就必须有显示个数，如果多出来的，添加...的导航，将多于的导航放在这个下面

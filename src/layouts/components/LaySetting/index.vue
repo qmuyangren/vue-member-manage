@@ -22,11 +22,7 @@
       </div>
       <h5 class="lay-theme-title">主题色</h5>
       <div class="lay-theme-body">
-        <div class="d-flex flex-row">
-          <div v-for="item in colorList" :key="item" class="color-item rounded" :index="item" :style="{ backgroundColor: item }" @click="setTheme('primaryColor', item)">
-            <i v-if="item == themeSet.primaryColor" class="el-icon el-icon-check text-white" />
-          </div>
-        </div>
+        <lay-theme />
       </div>
       <h5 class="lay-theme-title">导航模式</h5>
       <div class="lay-theme-body">
@@ -81,10 +77,11 @@
 </template>
 <script>
 import Drawer from './Drawer'
+import LayTheme from './LayTheme'
 import { mapState, mapGetters } from 'vuex'
 export default {
   components: {
-    Drawer
+    Drawer, LayTheme
   },
   data() {
     return {
@@ -144,7 +141,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped="scoped">
+<style lang="scss" rel="stylesheet/scss">
   $name: 'lay-theme';
   .#{$name}{
     // .#{$name}-header{

@@ -4,14 +4,9 @@ import Cookies from 'js-cookie'
 const app = {
   namespaced: true,
   state: {
-    sidebar: {
-      opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
-      withoutAnimation: false
-    },
-    device: false, // 是否移动端
     themeSet: { // 主题设置
       navTheme: 'dark', // 整体风格设置（导航背景）
-      primaryColor: '#1890ff', // 主题颜色
+      primaryColor: '#1890FF', // 主题颜色
       layout: 'sidemenu', // 导航模式sidemenu || topmenu
       contentWidth: 'Fluid', // 内容区域宽度 如果当前导航模式为sidemenu哪么只能是流式，如果是topmenu哪可以选择定宽或流式
       fixedHeader: true, // 固定头部
@@ -19,8 +14,16 @@ const app = {
       fixSiderbar: true, // 让sidemenu固定高度出现滚动条
       tagsView: true // 标签导航是否显示
     },
+    sidebar: {
+      opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
+      withoutAnimation: false
+    },
+    device: false, // 是否移动端
     theme: variables.theme, // 得到elementui的版本号
-    colorList: ['#f5222d', '#fa541c', '#faad14', '#13c2c2', '#52c41a', '#1890ff', '#2f54eb', '#722ed1'],
+    asideMinWidth: 72,
+    asideMaxWidth: 208,
+    headerHeight: 48,
+    colorList: ['#1890FF', '#F5222D', '#FA541C', '#FAAD14', '#13C2C2', '#52C41A', '#2F54EB', '#722ED1'],
     themeStyle: [{ value: 'dark', label: '亮色菜单风格' }, { value: 'light', label: '亮色菜单风格' }],
     layoutList: [{ value: 'sidemenu', label: '侧边菜单布局' }, { value: 'topmenu', label: '顶部菜单布局' }],
     topList: [{ value: 'Fixed', label: '流式' }, { value: 'Fluid', label: '定宽' }],
@@ -60,7 +63,7 @@ const app = {
         // console.log(!!state.themeSet[data[0]])
         state.themeSet[data[0]] = !!state.themeSet[data[0]]
       }
-      window.localStorage.setItem('themeSet', state.themeSet)
+      window.localStorage.setItem('themeSet', JSON.stringify(state.themeSet))
     },
     // 大小
     SET_SIZE: (state, size) => {
