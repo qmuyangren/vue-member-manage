@@ -1,6 +1,15 @@
 <template>
-  <el-container>
-    <el-header>asdafsdf</el-header>
-    <el-main><router-view /></el-main>
-  </el-container>
+  <basic-layout>
+    <RouteView />
+  </basic-layout>
 </template>
+<script>
+import BasicLayout from './BasicLayout.vue'
+import RouteView from './components/RouteView'
+export default {
+  name: 'Layout',
+  components: {
+    BasicLayout, RouteView
+  }
+}
+</script>

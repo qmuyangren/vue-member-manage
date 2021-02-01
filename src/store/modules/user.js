@@ -1,126 +1,124 @@
-// import { login, logout, getInfo } from '@/api/index'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
 import request from '@/api'
-
+import { desEncrypt } from '@/utils'
+const tokenName = process.env.VUE_APP_TOKEN
 const column = {
   namespaced: true,
   state: {
-    token: getToken(),
-    name: '',
-    avatar: '',
-    introduction: '',
-    roles: []
+    user: {
+      needChangePassword: false,
+      nextNeedCaptcha: false,
+      'CMS-Auth-Token': '',
+      userName: '',
+      userAvatar: '',
+      lastLoginTime: '',
+      lastLoginIP: ''
+    },
+    routings: [], // 权限标识
+    menus: [], // 菜单
+    notice: '',
+    ssoAuthToken: ''
   },
   mutations: {
-    SET_TOKEN: (state, token) => {
-      state.token = token
+    // 用户和路由权限
+    SET_USER(state, data) {
+      const { auth, ...propData } = data
+      const { menus, routings, ...user } = auth
+      state.user = Object.assign({}, state.user, user, propData)
+      state.menus = menus || []
+      state.routings = routings || []
+      if (localStorage.getItem('userName') && localStorage.getItem('userName') !== user.userName) {
+        Object.keys(localStorage).forEach(item => item.indexOf('pageList') !== -1 ? localStorage.removeItem(item) : '')
+        window.localStorage.setItem('userName', user.userName)
+        window.localStorage.setItem('userAvatar', user.userAvatar || 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80')
+      } else {
+        window.localStorage.setItem('userName', user.userName || '')
+        window.localStorage.setItem('userAvatar', user.userAvatar || 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80')
+      }
+      if (propData[tokenName]) window.localStorage.setItem(`${tokenName}`, propData[tokenName])
+      if (propData['siteId']) window.localStorage.setItem('siteId', propData['siteId'])
+      if (propData['siteName']) window.localStorage.setItem('siteName', propData['siteName'])
     },
-    SET_INTRODUCTION: (state, introduction) => {
-      state.introduction = introduction
+    // 退出，清空数据
+    SET_OUT(state) {
+      window.localStorage.removeItem('CMS-Auth-Token')
+      state.user = {
+        needChangePassword: false,
+        nextNeedCaptcha: false,
+        'CMS-Auth-Token': '',
+        userName: '',
+        lastLoginTime: '',
+        lastLoginIP: ''
+      }
+      state.menus = []
+      state.routings = []
+      state.ssoAuthToken = ''
     },
-    SET_NAME: (state, name) => {
-      state.name = name
+    SET_NCP(state, data) {
+      state.user.needChangePassword = data
     },
-    SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
+    UPDATE_USER(state, data) {
+      state.user = Object.assign({}, state.user, data)
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+    UPDATE_ROUTINGS(state, data) {
+      state.routings = data || []
+    },
+    // 通知
+    SET_NOTICE(state, data) {
+      state.notice = data > 99 ? '99+' : data
+    },
+    // 单点登录token
+    SET_SSO(state, data) {
+      state.ssoAuthToken = data.authToken
     }
   },
   actions: {
     // 普通登录
-    login({ commit }, userInfo) {
-      const { username, password } = userInfo
-      return new Promise((resolve, reject) => {
-        request.fetchLogin({ username: username.trim(), password: password }).then(response => {
-          const { data } = response
-          commit('SET_TOKEN', data.token)
-          setToken(data.token)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+    fetchLogin({ state, commit, rootState, dispatch }, data) {
+      data.password = desEncrypt(data.password)
+      return request.fetchLogin(data).then(res => {
+        if (res.code === 200 && !res.data.nextNeedCaptcha) {
+          commit('SET_USER', res.data)
+          dispatch('system/fetchSetting', {}, { root: true })
+          // dispatch('config/FetchSitesOwnsite', true, { root: true })
+        }
+        return res
       })
     },
-
-    // 登录后获取详情
-    getInfo({ commit, state }) {
-      return new Promise((resolve, reject) => {
-        request.fetchUserInfo(state.token).then(response => {
-          const { data } = response
-
-          if (!data) {
-            reject('Verification failed, please Login again.')
+    // 单点登录后获取详情
+    fetchSingleInfo({ state, commit, rootState, dispatch }, data) {
+      commit('SET_SSO', data)
+      return request.fetchSingleInfo(data).then(res => {
+        if (res.code === 200) {
+          if (res.data.userType === 1) {
+            commit('SET_USER', res.data)
+            dispatch('system/fetchSetting', {}, { root: true })
+            // dispatch('config/FetchSitesOwnsite', true, { root: true })
+          } else {
+            if (res.data.url) window.location.href = res.data.url
           }
-
-          const { roles, name, avatar, introduction } = data
-
-          // roles must be a non-empty array
-          if (!roles || roles.length <= 0) {
-            reject('getInfo: roles must be a non-null array!')
-          }
-
-          commit('SET_ROLES', roles)
-          commit('SET_NAME', name)
-          commit('SET_AVATAR', avatar)
-          commit('SET_INTRODUCTION', introduction)
-          resolve(data)
-        }).catch(error => {
-          reject(error)
-        })
+        }
+        return res
       })
     },
-
-    // 退出登录
-    logout({ commit, state, dispatch }) {
-      return new Promise((resolve, reject) => {
-        request.fetchLogout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          removeToken()
-          resetRouter()
-
-          // reset visited views and cached views
-          // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-          dispatch('tagsView/delAllViews', null, { root: true })
-
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
+    // 退出
+    fetchLogout({ state, commit, dispatch }) {
+      const token = window.localStorage.getItem('CMS-Auth-Token')
+      const authToken = state.ssoAuthToken
+      request.fetchLogout({ token, authToken })
+      commit('SET_OUT')
+      dispatch('permission/Clear', true, { root: true })
     },
-
-    // remove token
-    resetToken({ commit }) {
-      return new Promise(resolve => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        removeToken()
-        resolve()
-      })
+    // 是否需要修改密码
+    SetNeedChangePassword({ commit }) {
+      commit('SET_NCP', false)
     },
-
-    // dynamically modify permissions
-    async changeRoles({ commit, dispatch }, role) {
-      const token = role + '-token'
-
-      commit('SET_TOKEN', token)
-      setToken(token)
-
-      const { roles } = await dispatch('getInfo')
-
-      resetRouter()
-
-      // generate accessible routes map based on roles
-      const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-      // dynamically add accessible routes
-      router.addRoutes(accessRoutes)
-
-      // reset visited views and cached views
-      dispatch('tagsView/delAllViews', null, { root: true })
+    // 用户通知
+    fetchNotice({ state, commit, rootState, dispatch }, data) {
+      return request.fetchSystemmessageNumber().then(res => {
+        if (res.code === 200) {
+          commit('SET_NOTICE', res.data.unreadMessage)
+        }
+      })
     }
   }
 }

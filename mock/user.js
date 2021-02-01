@@ -28,12 +28,21 @@ module.exports = [
     response: config => {
       const { username } = config.body
       const token = tokens[username]
-
       // mock error
       if (!token) {
         return {
           code: 602,
-          data: token,
+          data: {
+            'CMS-Auth-Token': username,
+            auth: {
+              userName: '',
+              lastLoginTime: '',
+              lastLoginIP: '',
+              menus: [],
+              routings: []
+            },
+            orgId: '', roleIds: '', siteId: '', siteName: ''
+          },
           message: 'Account and password are incorrect.',
           redirectUrl: '',
           requestUrl: '',
@@ -44,7 +53,17 @@ module.exports = [
 
       return {
         code: 200,
-        data: token,
+        data: {
+          'CMS-Auth-Token': username,
+          auth: {
+            userName: 'system',
+            lastLoginTime: new Date(),
+            lastLoginIP: '218.199.207.46',
+            menus: [],
+            routings: []
+          },
+          orgId: 1, roleIds: [], siteId: 91, siteName: '党支部站点'
+        },
         message: '',
         redirectUrl: '',
         requestUrl: '',

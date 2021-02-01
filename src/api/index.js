@@ -1,8 +1,8 @@
 const modulesFiles = require.context('./apis', true, /\.js$/)
+// console.log('modulesFiles', modulesFiles)
 const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   const value = modulesFiles(modulePath)
   modules = Object.assign(modules, value.default)
-  console.log('modules', modules)
   return modules
 }, {})
 

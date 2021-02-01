@@ -1,4 +1,5 @@
 <template>
+  <!-- 第三方登录 -->
   <div class="social-signup-container">
     <div class="sign-btn" @click="wechatHandleClick('wechat')">
       <span class="wx-svg-container"><svg-icon icon-class="wechat" class="icon" /></span>

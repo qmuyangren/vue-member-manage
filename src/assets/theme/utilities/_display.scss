@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+//1 外部值 --- 就是说这些值只会直接影响一个元素的外部表现，而不影响元素里面的儿子级孙子级元素的表现
+//
+//display: block	此元素将显示为块级元素，此元素前后会带有换行符。
+//display: inline	默认。此元素会被显示为内联元素，元素前后没有换行符。
+//display: run-in	此元素会根据上下文作为块级元素或内联元素显示。
+//2 内部值  --- 内部值主要是用来管束自己下属的儿子级元素的排布的。
+//
+//display: flow;    含义不清，实验室阶段产品， Chrome不支持。
+//display: flow-root;
+//display: table	此元素会作为块级表格来显示（类似 <table>），表格前后带有换行符。
+//display: flex;
+//display: grid;
+//display: ruby;
+//display: subgrid;
+//3 列表值
+//
+//display: list-item	此元素会作为列表显示。
+//4 属性值  --- 属性值一般是附属于主值的，比如主值里设置了 display:table;，就可以在子元素里使用 display:table-row-group;等等属性，不过并不绝对。关于它们的作用，主要参考主值就够了
+//
+//display: table-row-group	此元素会作为一个或多个行的分组来显示（类似 <tbody>）。
+//display: table-header-group	此元素会作为一个或多个行的分组来显示（类似 <thead>）。
+//display: table-footer-group	此元素会作为一个或多个行的分组来显示（类似 <tfoot>）。
+//display: table-row	此元素会作为一个表格行显示（类似 <tr>）。
+//display: table-cell	此元素会作为一个表格单元格显示（类似 <td> 和 <th>）
+//display: table-column-group	此元素会作为一个或多个列的分组来显示（类似 <colgroup>）。
+//display: table-column	此元素会作为一个单元格列显示（类似 <col>）
+//display: table-caption	此元素会作为一个表格标题显示（类似 <caption>）
+//display: ruby-text;
+//display: ruby-text-container;
+//display: ruby-base;
+//display: ruby-base-container;
+//5 显示值   --- MDN里把它叫做 <display-box>values（ 盒子值），我把它叫做 显示值，主要是为了便于理解
+//
+//display: contents;
+//display: none	此元素不会被显示。
+//display: inline-table	此元素会作为内联表格来显示（类似 <table>），表格前后没有换行符。
+//display: inline-flex;
+//display: inline-grid;
+//6 混合值
+//
+//display: inline-block	行内块元素。（CSS2.1 新增的值）
+//7 全局值
+//display: inherit	规定应该从父元素继承 display 属性的值。
+//display: initial;
+//display: unset;
+
+//compact	CSS 中有值 compact，不过由于缺乏广泛支持，已经从 CSS2.1 中删除。
+//marker	CSS 中有值 marker，不过由于缺乏广泛支持，已经从 CSS2.1 中删除。
+
+
+@each $breakpoint in map_keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint){
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .d#{$infix}-none         { display: none !important; }
+    .d#{$infix}-inline       { display: inline !important; }
+    .d#{$infix}-inline-block { display: inline-block !important; }
+    .d#{$infix}-block        { display: block !important; }
+    .d#{$infix}-table        { display: table !important; }
+    .d#{$infix}-table-row    { display: table-row !important; }
+    .d#{$infix}-table-cell   { display: table-cell !important; }
+    .d#{$infix}-flex         { display: flex !important; }
+    .d#{$infix}-inline-flex  { display: inline-flex !important; }
+  }
+}
+
+@media print {
+  .d-print-none         { display: none !important; }
+  .d-print-inline       { display: inline !important; }
+  .d-print-inline-block { display: inline-block !important; }
+  .d-print-block        { display: block !important; }
+  .d-print-table        { display: table !important; }
+  .d-print-table-row    { display: table-row !important; }
+  .d-print-table-cell   { display: table-cell !important; }
+  .d-print-flex         { display: flex !important; }
+  .d-print-inline-flex  { display: inline-flex !important; }
+}

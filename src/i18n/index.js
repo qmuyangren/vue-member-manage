@@ -20,6 +20,7 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
       }
     })
   }
+  // console.log(modules)
   return modules
 }, {})
 

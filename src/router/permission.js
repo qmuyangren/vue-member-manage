@@ -7,89 +7,77 @@ import { createRouter } from '.'
 
 NProgress.configure({ showSpinner: false })
 
-const getToken = function() {
-  return localStorage.getItem('HDGSCMS-Auth-Token')
+/**
+ * 递归处理多余的 RouteView : <router-view>，
+ * 让需要访问的组件保持在第一层 index : <router-view> 之下
+ * @param to
+ */
+function handleKeepAlive(to) {
+  if (to.matched && to.matched.length > 2) {
+    for (let i = 0; i < to.matched.length; i++) {
+      const element = to.matched[i]
+      if (element.components.default.name === 'RouteView') {
+        to.matched.splice(i, 1)
+        handleKeepAlive(to)
+      }
+    }
+  }
 }
-// const whiteList = ['/login', '/auth-redirect'] // 没有重定向白名单
+
+const getToken = function() {
+  return localStorage.getItem('CMS-Auth-Token')
+}
+const whiteList = ['/login', '/register'] // 没有重定向白名单
 router.beforeEach(async(to, from, next) => {
   NProgress.start()
-  // set page title
-  // document.title = getPageTitle(to.meta.title)
-  // if (getToken()) {
-  //   if (to.path === '/login') {
-  //     next({ path: '/' })
-  //     NProgress.done()
-  //   } else {
-  //     // determine whether the user has obtained his permission roles through getInfo
-  //     const hasRoles = store.getters.roles && store.getters.roles.length > 0
-  //     if (hasRoles) {
-  //       next()
-  //     } else {
-  //       try {
-  //         // get user info 获取用户信息
-  //         // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-  //         // note: 注意:角色必须是一个对象数组!例如:['admin']或['developer'，'editor']
-  //         const { roles } = await store.dispatch('user/getInfo')
-  //         // 根据角色生成可访问路由图
-  //         const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-  //         // 动态添加可访问路由
-  //         router.addRoutes(accessRoutes)
-  //         // 攻击方法，以确保地址路由是完整的
-  //         // 设置replace: true，这样导航就不会留下历史记录
-  //         next({ ...to, replace: true })
-  //       } catch (error) {
-  //         // 删除令牌，并进入登录页面重新登录
-  //         await store.dispatch('user/resetToken')
-  //         Message.error(error || 'Has Error')
-  //         next(`/login?redirect=${to.path}`)
-  //         NProgress.done()
-  //       }
-  //     }
-  //   }
-  // } else {
-  //   if (whiteList.indexOf(to.path) !== -1) {
-  //     next()
-  //   } else {
-  //     next(`/login?redirect=${to.path}`)
-  //   }
-  //   NProgress.done()
-  // }
-  if (to.path === '/callback') {
-    next()
-    NProgress.done()
-  } else if (getToken()) {
+  handleKeepAlive(to)
+  console.log(to, from)
+  if (getToken()) { // 如果有token
     // 登录后进入登录页
     if (to.path === '/login') {
       next()
       NProgress.done()
     } else {
-      debugger
       // 当进入非登录页时，需要进行权限校验
       const addRoutes = store.getters.addRoutes
+      // console.log(addRoutes.length, store.getters.routes)
       if (addRoutes.length === 0) {
         store.dispatch('permission/GenerateRoutes').then((routes) => {
+          console.log('动态加载路由')
+          // console.log(routes)
           if (routes instanceof Array && routes.length) {
-            router.match = createRouter(router).match
+            router.match = createRouter(routes).match
             router.addRoutes(routes) // 动态添加可访问路由表
             next({ ...to }) //, replace: true
           } else {
             console.log('路由获取失败')
           }
         })
+      } else {
+        // console.log('已加载过动态路由')
+        if (to.path === '/') {
+          next({ path: '/workplace', replace: true })
+        } else {
+          if (store.state.permission.openTarget.includes(to.name) && from.name && from.name !== to.name) {
+            window.open(`/#${to.fullPath}`)
+          } else {
+            next()
+          }
+        }
+        NProgress.done()
       }
     }
   } else {
-    // console.log('已加载过动态路由')
-    if (to.path === '/') {
-      next({ path: '/workplace/index', replace: true })
+    debugger
+    if (whiteList.indexOf(to.path) !== -1) {
+      // in the free login whitelist, go directly
+      next()
+      NProgress.done()
     } else {
-      if (store.state.permission.openTarget.includes(to.name) && from.name && from.name !== to.name) {
-        window.open(`/#${to.fullPath}`)
-      } else {
-        next()
-      }
+      // other pages that do not have permission to access are redirected to the login page.
+      next(`/login?redirect=${to.fullPath}`)
+      NProgress.done()
     }
-    NProgress.done()
   }
 })
 

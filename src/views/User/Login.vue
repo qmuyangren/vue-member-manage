@@ -3,12 +3,11 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">{{ $t("layout.welcome") }}Login Form</h3>
       </div>
-
       <el-form-item prop="username">
         <span class="svg-container">
-          <hd-icon slot="prefix" icon-class="user" />
+          <lay-icon slot="prefix" icon-class="user" />
         </span>
         <el-input
           ref="username"
@@ -24,7 +23,7 @@
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
-            <hd-icon icon-class="password" />
+            <lay-icon icon-class="password" />
           </span>
           <el-input
             :key="passwordType"
@@ -40,7 +39,7 @@
             @keyup.enter.native="handleLogin"
           />
           <span class="show-pwd" @click="showPwd">
-            <hd-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            <lay-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
       </el-tooltip>
@@ -62,7 +61,23 @@
         </el-button>
       </div>
     </el-form>
-
+    <div class="block">
+      <el-button type="primary">
+        Primary
+      </el-button>
+      <el-button type="success">
+        Success
+      </el-button>
+      <el-button type="info">
+        Info
+      </el-button>
+      <el-button type="warning">
+        Warning
+      </el-button>
+      <el-button type="danger">
+        Danger
+      </el-button>
+    </div>
     <el-dialog title="Or connect with" :visible.sync="showDialog">
       Can not be simulated on local, so please combine you own business simulation! ! !
       <br>
@@ -74,9 +89,7 @@
 </template>
 
 <script>
-// import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
-
 export default {
   name: 'Login',
   components: { SocialSign },
@@ -151,16 +164,17 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
+          this.$store.dispatch('user/fetchLogin', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              this.onNavgate()
               this.loading = false
             })
             .catch(() => {
               this.loading = false
             })
         } else {
-          console.log('error submit!!')
+          // console.log('error submit!!')
           return false
         }
       })
@@ -172,6 +186,16 @@ export default {
         }
         return acc
       }, {})
+    },
+    onNavgate() {
+      const { redirect } = this.$route.query
+      if (redirect && localStorage.getItem('pageList')) {
+        // console.log('重定向到：', redirect)
+        this.$router.replace(unescape(redirect))
+      } else {
+        // console.log('重定向到工作台')
+        this.$router.replace('/workplace')
+      }
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {

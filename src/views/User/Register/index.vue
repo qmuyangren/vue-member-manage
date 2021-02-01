@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3>会员注册</h3>
-    <el-form ref="form" :model="form" label-width="80px">
+    <!-- <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="用户名">
         <el-input v-model="form.name" />
       </el-form-item>
@@ -24,6 +24,11 @@
         <el-button type="primary" @click="onSubmit">确定注册</el-button>
       </el-form-item>
     </el-form>
-    <div>去登录</div>
+    <div>去登录</div> -->
   </div>
 </template>
+<script>
+export default {
+  name: 'Register'
+}
+</script>
