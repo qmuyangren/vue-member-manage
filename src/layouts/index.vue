@@ -1,6 +1,6 @@
 <template>
   <basic-layout>
-    <RouteView />1
+    <RouteView />
   </basic-layout>
 </template>
 <script>
