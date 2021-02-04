@@ -45,6 +45,7 @@ export default {
     window.removeEventListener('resize', this.$_resizeHandler)
   },
   mounted() {
+    this.$_widths()
     const isMobile = this.$_isMobile()
     if (isMobile) {
       store.dispatch('app/toggleDevice', 'mobile')
@@ -68,15 +69,14 @@ export default {
       if (rect.width >= this.query['screen-lg'].minWidth && rect.width <= this.query['screen-lg'].maxWidth) { containerNames = 'screen-lg' }
       if (rect.width >= this.query['screen-xl'].minWidth && rect.width <= this.query['screen-xl'].maxWidth) { containerNames = 'screen-xl' }
       if (rect.width >= this.query['screen-xxl'].minWidth) { containerNames = 'screen-xxl' }
-      return containerNames
+      const bodyEle = document.getElementById('app')
+      bodyEle.setAttribute('class', containerNames)
     },
     $_resizeHandler() {
       if (!document.hidden) {
         const isMobile = this.$_isMobile()
-        var bodyEle = document.getElementsByTagName('body')[0]
-        bodyEle.setAttribute('class', this.$_widths())
+        this.$_widths()
         store.dispatch('app/toggleDevice', isMobile ? 'mobile' : 'desktop')
-
         if (isMobile) {
           store.dispatch('app/closeSideBar', { withoutAnimation: true })
         }

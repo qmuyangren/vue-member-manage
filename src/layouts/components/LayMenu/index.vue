@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    :mode="mode"
+    :mode="modes"
     :default-active="activeMenu"
     :collapse="isCollapse"
     @select="handleSelect"
@@ -53,18 +53,13 @@ export default {
       return path
     },
     isCollapse() {
-      if (this.device !== 'desktop') {
-        return false
-      } else {
-        return this.sidebar.opened
-      }
+      return this.themeSet.layout === 'topmenu' ? false : !!this.sidebar.opened
     },
     backColor() {
-      if (this.themeSet.navTheme === 'dark' || this.themeSet.layout === 'topmenu') {
-        return '#001529'
-      } else {
-        return '#FFFFFF'
-      }
+      return this.themeSet.navTheme === 'dark' ? '#001529' : '#FFFFFF'
+    },
+    modes() {
+      return this.themeSet.layout === 'topmenu' ? 'horizontal' : 'vertical'
     }
   },
   watch: {

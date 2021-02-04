@@ -34,6 +34,5 @@ export default {
   overflow-x: hidden;
   overflow-y: overlay;
   box-sizing: border-box;
-  padding: 30px 30px 0;
 }
 </style>

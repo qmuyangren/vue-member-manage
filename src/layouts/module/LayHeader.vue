@@ -86,7 +86,7 @@ export default {
     },
     setHeaerClass() {
       const className = []
-      if (this.themeSet.layout === 'topmenu') { className.push('lay-header-dark') }
+      if (this.themeSet.navTheme === 'dark' && this.themeSet.layout === 'topmenu') { className.push('lay-header-dark') }
       if (this.themeSet.fixedHeader === true) { className.push('lay-header-fixed') }
       if (this.sidebar.opened) { className.push('lay-header-has') }
       return className
@@ -138,7 +138,7 @@ $drawer: 'lay-header';
       h1 {
         display: inline-block;
         margin: 0 0 0 12px;
-        color: #fff;
+        color: #000;
         font-weight: 400;
         font-size: 16px;
         vertical-align: top;
@@ -147,23 +147,6 @@ $drawer: 'lay-header';
   }
   .#{$drawer}-nav{
     flex: 1 1 0%;
-    .el-menu--horizontal{
-      border-bottom: 0px;
-      >.el-submenu, >.el-menu-item{
-        height: 48px;
-        line-height: 48px;
-        .el-submenu__title{
-          height: 48px;
-        line-height: 48px;
-        }
-        &.is-active{
-          border-bottom: 0;
-          .el-submenu__title{
-            border-bottom: 0;
-          }
-        }
-      }
-    }
   }
   .#{$drawer}-global{
     display: flex;
@@ -193,6 +176,13 @@ $drawer: 'lay-header';
   &.#{$drawer}-dark{
     background-color: #001529;
     color: rgba(0,0,0,.85);
+    .#{$drawer}-logo{
+      a{
+        h1 {
+          color: #fff;
+        }
+      }
+    }
     .#{$drawer}-global{
       .lay-svg-icon{
         color: #fff;
@@ -215,27 +205,28 @@ $drawer: 'lay-header';
         color: #fff;
       }
     }
-    .el-menu{
-      >.el-submenu{
-        >.el-submenu__title{
-          >.el-submenu__icon-arrow{
-            display: none;
-          }
-        }
-      }
-    }
-    .el-menu--horizontal{
-      .el-menu--popup{
-        .el-submenu, .el-menu-item{
-          &:hover{
-            background-color: #fff;
-          }
-          &.is-active{
-            background-color: #1989fa;
-          }
-        }
-      }
-    }
+    // .el-menu{
+    //   background-color: #001529;
+    //   >.el-submenu{
+    //     >.el-submenu__title{
+    //       >.el-submenu__icon-arrow{
+    //         display: none;
+    //       }
+    //     }
+    //   }
+    // }
+    // .el-menu--horizontal{
+    //   .el-menu--popup{
+    //     .el-submenu, .el-menu-item{
+    //       &:hover{
+    //         background-color: #fff;
+    //       }
+    //       &.is-active{
+    //         background-color: #1989fa;
+    //       }
+    //     }
+    //   }
+    // }
   }
 }
 </style>

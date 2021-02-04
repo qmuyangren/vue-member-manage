@@ -3,7 +3,7 @@
     <div class="lay-aside-children" :class="setAsideChildrenClass()" :style="setAsideStyle()">
       <transition name="sidebarLogoFade">
         <div class="lay-sider-logo">
-          <router-link to="/"><img src="../../assets/logo.svg"> <h1 v-if="!sidebar.opened">{{ title }}</h1></router-link>
+          <router-link to="/"><img src="../../assets/logo.svg"> <h1 v-if="device === 'mobile' ? true : !sidebar.opened ? true : false">{{ title }}</h1></router-link>
         </div>
       </transition>
       <el-scrollbar wrap-class="sidebar-scrollbar" style="flex: 1 1 0%;">
@@ -62,12 +62,12 @@ export default {
     position: relative;
     -webkit-transition: width 0.28s;
     transition: width 0.28s;
-    box-shadow: 2px 0 8px 0 rgba(29,35,41,.05);
     z-index: 13;
     .lay-aside-children{
       display: flex;
       flex-direction: column;
       height: 100%;
+      box-shadow: 2px 0 8px 0 rgba(29,35,41,.05);
     }
     .lay-sider-logo{
       position: relative;
@@ -118,8 +118,8 @@ export default {
        .el-submenu{
          font-size: 14px;
          >.el-submenu__title{
-           height: 48px;
-           line-height: 48px;
+           height: 40px;
+           line-height: 40px;
            .lay-svg-icon{
            width: 1em;
            height: 1em;
@@ -130,16 +130,14 @@ export default {
          }
        }
        > .el-menu-item{
-         height: 48px;
-         line-height: 48px;
+         height: 40px;
+         line-height: 40px;
          .lay-svg-icon{
            width: 1em;
            height: 1em;
            vertical-align: middle;
            margin-right:8px;
            transition: width .3s, height .3s;
-         }
-         &:last-child{
          }
        }
     }
@@ -244,7 +242,7 @@ export default {
        a{color:rgba(0,0,0,.85);}
      }
      .lay-aside-link{
-       border-color:rgba(0,0,0,.25);
+       border-color:#f0f0f0;
        svg{fill: #000;}
      }
      .el-scrollbar__view{
