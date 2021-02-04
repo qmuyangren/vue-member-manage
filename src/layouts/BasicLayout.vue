@@ -1,7 +1,10 @@
 <template>
-  <el-container class="lay-layout" :class="layoutClassName()">
-    <div v-if="themeSet.layout === 'sidemenu'" class="lay-aside-replace" :class="asideRepClassName()" />
-    <lay-aside v-if="themeSet.layout === 'sidemenu'" :class="asideClassName()" :style="getAsideStyle()" />
+  <el-container class="lay-layout">
+    <!-- <div v-if="device === 'mobile' ? false : themeSet.layout === 'sidemenu' ? true : false" class="lay-aside-replace" :class="asideRepClassName()" /> -->
+    <lay-aside v-if="device === 'mobile' ? false : themeSet.layout === 'sidemenu' ? true : false" />
+    <el-drawer v-if="device === 'mobile'" :visible.sync="sidebar.opened" direction="ltr" :before-close="handleClose" size="auto">
+      <lay-aside />
+    </el-drawer>
     <el-container>
       <lay-header />
       <el-main>
@@ -11,8 +14,8 @@
         </el-container>
       </el-main>
       <el-footer>Footer</el-footer>
+      <lay-setting />
     </el-container>
-    <lay-setting />
   </el-container>
 </template>
 <script>
@@ -21,12 +24,14 @@ import LaySetting from './components/LaySetting/index'
 import LayHeader from './module/LayHeader'
 // import TagsView from './components/TagsView/index'
 import LayTagsView from './components/LayTagsView/index'
+import ResizeMixin from './mixin/ResizeHandler'
 import { mapGetters } from 'vuex'
 export default {
   name: 'BasicLayout',
   components: {
     LayAside, LaySetting, LayHeader, LayTagsView
   },
+  mixins: [ResizeMixin],
   data() {
     return {
       drawer: true
@@ -34,7 +39,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar', 'themeSet'
+      'sidebar', 'themeSet', 'device'
     ]),
     navTheme() {
       if (this.themeSet.navTheme === 'dark' || this.themeSet.layout === 'topmenu') {
@@ -55,44 +60,16 @@ export default {
   },
   mounted() {},
   methods: {
-    layoutClassName: function() {
-      return [
-        this.sidebar.opened ? 'lay-layout-has-sider' : null
-      ]
-    },
-    asideRepClassName: function() {
-      return [
-        this.sidebar.opened ? 'lay-aside-replace-open' : null
-      ]
-    },
-    asideClassName: function() {
-      return [
-        'lay-sider-' + this.themeSet.navTheme,
-        this.themeSet.fixSiderbar ? 'lay-sider-fixed' : null
-      ]
-    },
-    getAsideStyle: function() {
-      return { width: this.sidebar.opened ? '72px' : '208px' }
+    handleClose(done) {
+      this.$store.dispatch('app/toggleSideBar')
     }
   }
 }
 </script>
-<style lang="scss" rel="stylesheet/scss">
-.lay-aside-replace{
-  width: 208px;
-  overflow: hidden;
-  flex: 0 0 208px;
-  max-width: 208px;
-  min-width: 208px;
-  transition: background-color 0.3s ease 0s,
-  min-width 0.3s ease 0s,
-  max-width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
-  &.lay-aside-replace-open{
-    width: 72px;
-    overflow: hidden;
-    flex: 0 0 72px;
-    max-width: 72px;
-    min-width: 72px;
-  }
+<style>
+.lay-layout{
+  width: 100%;
+  min-height: 100%;
+  align-items: stretch!important;
 }
 </style>

@@ -94,21 +94,22 @@ export function filterAsyncRoutes(routes) {
 // 根路由
 export const rootRoute = {
   path: '/',
-  name: 'index',
+  // name: 'index',
   component: (resolve) => require([`@/${routeMap.index}`], resolve)
   // component: () => import(`@/${routeMap.index}`)
 }
 // 公共路由
 export const constantRoutes = [
-  { path: '/login', name: 'Login', hidden: true },
+  { path: '/login', name: 'login', hidden: true },
   { path: '/register', name: 'Register', hidden: true }, // 注册
   { path: '/agreement', name: 'Agreement', hidden: true }, // 用户协议
   { path: '/forget', name: 'Forget', hidden: true }, // 找回密码，先验证帐号
   { path: '/forgetSteps', name: 'ForgetSteps', hidden: true }, // 找回密码步骤
-  { path: '/callback', name: 'Callback', hidden: true },
+  { path: '/callback', name: 'callback', hidden: true },
   { path: '/redirect/:path(.*)', name: 'Redirect', hidden: true }, // 重定向
   { path: '/layout', name: 'layout', hidden: true }
 ]
+
 export const exceptionRoutes = [
   { path: '/error', name: 'error', hidden: true },
   { path: '*', name: 'notFound', hidden: true }
@@ -118,7 +119,7 @@ export const exceptionRoutes = [
 export const createRouter = routes =>
   new VueRouter({
     // mode: 'history',
-    base: __dirname, // process.env.BASE_URL,
+    base: process.env.BASE_URL, // process.env.BASE_URL,
     routes,
     scrollBehavior: (to, from, savedPosition) => {
       if (to.hash) {

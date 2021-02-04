@@ -1,10 +1,8 @@
 <template>
   <el-menu
     :mode="mode"
-    class="dark"
     :default-active="activeMenu"
     :collapse="isCollapse"
-    :background-color="backColor"
     @select="handleSelect"
   >
     <menu-item :menu-data="dataTree" />
@@ -43,7 +41,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['addRoutes', 'sidebar', 'themeSet']),
+    ...mapGetters(['addRoutes', 'sidebar', 'themeSet', 'device']),
     activeMenu() {
       const route = this.$route
       const { meta, path } = route
@@ -55,7 +53,11 @@ export default {
       return path
     },
     isCollapse() {
-      return this.sidebar.opened
+      if (this.device !== 'desktop') {
+        return false
+      } else {
+        return this.sidebar.opened
+      }
     },
     backColor() {
       if (this.themeSet.navTheme === 'dark' || this.themeSet.layout === 'topmenu') {

@@ -1,6 +1,6 @@
 <template>
-  <el-aside class="lay-sider">
-    <div class="lay-aside-children">
+  <el-aside class="lay-sider" :style="setAsideStyle()" :class="setAsideClass()">
+    <div class="lay-aside-children" :class="setAsideChildrenClass()" :style="setAsideStyle()">
       <transition name="sidebarLogoFade">
         <div class="lay-sider-logo">
           <router-link to="/"><img src="../../assets/logo.svg"> <h1 v-if="!sidebar.opened">{{ title }}</h1></router-link>
@@ -9,7 +9,7 @@
       <el-scrollbar wrap-class="sidebar-scrollbar" style="flex: 1 1 0%;">
         <lay-menu />
       </el-scrollbar>
-      <lay-aside-link class="lay-aside-link" :is-active="sidebar.opened" @toggleClick="toggleSideBar" />
+      <lay-aside-link v-if="device !== 'mobile'" class="lay-aside-link" :is-active="sidebar.opened" @toggleClick="toggleSideBar" />
     </div>
   </el-aside>
 </template>
@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar', 'themeSet'
+      'sidebar', 'themeSet', 'device'
     ])
   },
   mounted() {
@@ -36,6 +36,19 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    setAsideClass() {
+      return [this.themeSet.navTheme === 'dark' ? 'lay-sider-dark' : 'lay-sider-light']
+    },
+    setAsideChildrenClass() {
+      return [this.themeSet.fixSiderbar ? 'lay-sider-fixed' : '']
+    },
+    setAsideStyle() {
+      if (this.device === 'mobile') {
+        return { width: '208px' }
+      } else {
+        return { width: this.sidebar.opened ? '72px' : '208px' }
+      }
     }
   }
 }
@@ -46,14 +59,9 @@ export default {
   /*}*/
 
   .lay-sider{
+    position: relative;
     -webkit-transition: width 0.28s;
     transition: width 0.28s;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    height: 100%;
-    background-color: #fff;
     box-shadow: 2px 0 8px 0 rgba(29,35,41,.05);
     z-index: 13;
     .lay-aside-children{
@@ -103,6 +111,8 @@ export default {
       }
     }
     .el-menu {
+      font-feature-settings: "tnum","tnum";
+      font-variant: tabular-nums;
       background-color: transparent;
       border-right: 0px;
        .el-submenu{
@@ -153,7 +163,9 @@ export default {
      }
   }
    .lay-sider-dark{
-         background-color: #001529;
+     .lay-aside-children{
+      background-color: #001529;
+     }
      .lay-sider-logo{
        a{color: #fff;}
      }
@@ -161,66 +173,147 @@ export default {
        border-color:rgba(0,0,0,.25);
        svg{fill: #fff;}
      }
-     .el-menu{
-       background-color: #000c17;
-       .el-submenu{
-         >.el-submenu__title{
-           background-color: #001529;
-           color: #fff;
-           i{color: #fff;}
-         }
-       }
-     }
-     .el-menu-item{
-       color: hsla(0,0%,100%,.65);
-       &:hover{
-         background-color: transparent;
-         color: #fff;
-       }
-       &.is-active{
-         background-color: #1890ff;
-         color: #fff;
-       }
+     .el-scrollbar__view{
+        >.el-menu{
+          background-color: #000c17;
+          >.el-submenu{
+            >.el-submenu__title{
+              // color: hsla(0,0%,100%,.65);
+              background-color: #001529;
+            }
+            &.is-active{
+              >.el-submenu__title{
+                // color: hsla(0,0%,100%,.65);
+                color: #fff;
+              }
+            }
+            .el-menu.el-menu--inline{
+              .el-submenu{
+                &:hover{
+                  background-color: transparent;
+                  .el-submenu__title{
+                    background-color: transparent;
+                  }
+                }
+              }
+              .el-menu-item{
+                &:hover{
+                  background-color: transparent;
+                }
+              }
+            }
+          }
+          >.el-menu-item{
+            background-color: #001529;
+          }
+        }
+      }
+      .el-menu{
+        .el-submenu{
+          .el-submenu__title{
+            color: hsla(0,0%,100%,.65);
+          }
+          &.is-opened{
+            >.el-submenu__title{
+              color:#fff;
+            }
+          }
+          &:hover{
+            .el-submenu__title{
+              color: #fff;
+            }
+          }
+        }
+        .el-menu-item{
+          color: hsla(0,0%,100%,.65);
+          &:hover{
+            color: #fff;
+          }
+          &.is-active{
+            background-color: #1890ff;
+            color: #fff;
+          }
+        }
      }
    }
    .lay-sider-light{
-        background-color: #fff;
+     .lay-aside-children{
+      background-color: #fff;
+     }
      .lay-sider-logo{
-       a{color: #1890ff;}
+       a{color:rgba(0,0,0,.85);}
      }
      .lay-aside-link{
-       border-color:#f0f0f0;
-       svg{fill: #fff;}
+       border-color:rgba(0,0,0,.25);
+       svg{fill: #000;}
      }
-     .el-menu{
-       background-color: #fff;
-       .el-submenu{
-         >.el-submenu__title{
-           background-color: #fff;
-           color: #000;
-           i{color: #000;}
-         }
-         &.is-opened{
-           >.el-submenu__title{
-             background-color: #fff;
-             color: #1890ff;
-             i{color: #000;}
-           }
-         }
-       }
-     }
-     .el-menu-item{
-       color: rgba(0,0,0,.85);
-       &:hover{
-         background-color: transparent;
-         color: #1890ff;
-       }
-       &.is-active{
-         background-color: #e6f7ff;
-         color: #1890ff;
-         position: relative;
-         border-right: 2px solid #1890ff;
-       }
+     .el-scrollbar__view{
+        >.el-menu{
+          background-color: #fff;
+          >.el-submenu{
+            >.el-submenu__title{
+              // color: hsla(0,0%,100%,.65);
+              background-color: #fff;
+            }
+            &.is-active{
+              >.el-submenu__title{
+                // color: hsla(0,0%,100%,.65);
+                color: #1890ff;
+              }
+            }
+            .el-menu.el-menu--inline{
+              .el-submenu{
+                &:hover{
+                  background-color: transparent;
+                  .el-submenu__title{
+                    background-color: transparent;
+                  }
+                }
+              }
+              .el-menu-item{
+                &:hover{
+                  background-color: transparent;
+                }
+              }
+            }
+          }
+          >.el-menu-item{
+            background-color: #fff;
+          }
+        }
+      }
+      .el-menu{
+        .el-submenu{
+          .el-submenu__title{
+            color:rgba(0,0,0,.85);
+          }
+          &.is-opened{
+            >.el-submenu__title{
+              color:rgba(0,0,0,.85);
+            }
+          }
+          &.is-active{
+            >.el-submenu__title{
+              color:#1890ff;
+            }
+          }
+          &:hover{
+            >.el-submenu__title{
+              color: #1890ff;
+            }
+          }
+        }
+        .el-menu-item{
+          color:rgba(0,0,0,.85);;
+          &:hover{
+            color: #1890ff;;
+          }
+          &.is-active{
+            background-color: #e6f7ff;
+            border-right: 2px solid #1890ff;
+            color: #1890ff;
+          }
+        }
      }
    }
 
@@ -229,7 +322,6 @@ export default {
     top: 0;
     left: 0;
     bottom: 0;
-    overflow: hidden;
   }
   .sidebar-scrollbar{
     overflow-x: hidden !important;

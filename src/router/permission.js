@@ -1,9 +1,8 @@
-import router from '@/router'
+import router, { createRouter } from '@/router'
 import store from '@/store'
 // import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { createRouter } from '.'
 
 NProgress.configure({ showSpinner: false })
 
@@ -27,7 +26,7 @@ function handleKeepAlive(to) {
 const getToken = function() {
   return localStorage.getItem('CMS-Auth-Token')
 }
-const whiteList = ['/login', '/register'] // 没有重定向白名单
+const whiteList = ['/login'] // 没有重定向白名单
 router.beforeEach(async(to, from, next) => {
   NProgress.start()
   handleKeepAlive(to)

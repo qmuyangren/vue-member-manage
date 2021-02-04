@@ -19,6 +19,7 @@ $drawer: 'lay-drawer';
   }
   .#{$drawer}-wrapper{
     position: fixed;
+    z-index: 1000;
   }
   .#{$drawer}-wrapper-content{
     width: 100%;
@@ -87,8 +88,11 @@ $drawer: 'lay-drawer';
 .#{$drawer}-mask{
   position: fixed;
   width: 100%;
+  left: 0;
+  right: 0;
   height: 0;
   opacity: 0;
+  z-index: 999;
   background-color: rgba(0,0,0,.65);
   filter: alpha(opacity=50);
   transition: opacity .3s linear,height 0s ease .3s;

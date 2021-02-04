@@ -18,7 +18,7 @@ const app = {
       opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
       withoutAnimation: false
     },
-    device: false, // 是否移动端
+    device: 'desktop', // 是否移动端
     theme: variables.theme, // 得到elementui的版本号
     asideMinWidth: 72,
     asideMaxWidth: 208,
@@ -65,6 +65,9 @@ const app = {
       }
       window.localStorage.setItem('themeSet', JSON.stringify(state.themeSet))
     },
+    TOGGLE_DEVICE: (state, device) => {
+      state.device = device
+    },
     // 大小
     SET_SIZE: (state, size) => {
       state.size = size
@@ -82,6 +85,9 @@ const app = {
     },
     closeSideBar({ commit }, { withoutAnimation }) {
       commit('CLOSE_SIDEBAR', withoutAnimation)
+    },
+    toggleDevice({ commit }, device) {
+      commit('TOGGLE_DEVICE', device)
     },
     setSize({ state, commit, rootState, dispatch }, size) {
       commit('SET_SIZE', size)

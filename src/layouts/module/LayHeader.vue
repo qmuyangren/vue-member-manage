@@ -1,5 +1,5 @@
 <template>
-  <el-header class="lay-header" :height="height" :style="setHeaerStyle()">
+  <el-header class="lay-header" :height="height">
     <div class="lay-header-main" :class="setHeaerClass()" :style="setHeaerStyle()">
       <div v-if="themeSet.layout === 'topmenu'" class="lay-header-logo d-flex">
         <router-link to="/"><img src="../../assets/logo.svg"> <h1>{{ title }}</h1></router-link>
@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar', 'themeSet'
+      'sidebar', 'themeSet', 'device'
     ])
   },
   mounted() {
@@ -92,8 +92,10 @@ export default {
       return className
     },
     setHeaerStyle() {
-      return {
-        'width': this.themeSet.layout === 'topmenu' ? '100%' : this.sidebar.opened ? 'calc(100% - 72px)' : 'calc(100% - 208px)'
+      if (this.themeSet.fixedHeader) {
+        return {
+          left: this.themeSet.layout === 'topmenu' ? '0px' : this.sidebar.opened ? '72px' : '208px'
+        }
       }
     }
   }
@@ -109,23 +111,17 @@ $drawer: 'lay-header';
     display: flex;
     z-index: 11;
     align-items: center;
-    height: 100%;
     padding: 0 0px;
     background: #fff;
     box-shadow: 0 1px 4px rgba(0,21,41,.08);
+      height: 48px;
+      line-height: 48px;
     &.lay-header-fixed{
       position: fixed;
       top: 0;
       right: 0px;
-      height: 48px;
-      line-height: 48px;
     }
     &.lay-header-has{
-      position: fixed;
-      top: 0;
-      right: 0px;
-      height: 48px;
-      line-height: 48px;
     }
   }
   .#{$drawer}-logo{
