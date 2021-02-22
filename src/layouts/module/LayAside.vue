@@ -110,55 +110,6 @@ export default {
         margin-left: 6px;
       }
     }
-    .el-menu {
-      font-feature-settings: "tnum","tnum";
-      font-variant: tabular-nums;
-      background-color: transparent;
-      border-right: 0px;
-       .el-submenu{
-         font-size: 14px;
-         >.el-submenu__title{
-           height: 40px;
-           line-height: 40px;
-           .lay-svg-icon{
-           width: 1em;
-           height: 1em;
-           vertical-align: middle;
-           margin-right: 10px;
-           transition: width .3s, height .3s;
-         }
-         }
-       }
-       > .el-menu-item{
-         height: 40px;
-         line-height: 40px;
-         .lay-svg-icon{
-           width: 1em;
-           height: 1em;
-           vertical-align: middle;
-           margin-right:8px;
-           transition: width .3s, height .3s;
-         }
-       }
-    }
-     .el-menu--collapse{
-       width: 72px;
-       >.el-menu-item [class^=el-icon-],
-       >.el-submenu>.el-submenu__title [class^=el-icon-]{
-         margin-left: 4px;
-         font-size: 18px;
-       }
-     }
-     .el-menu--collapse{
-       >.el-menu-item .lay-svg-icon,
-       >.el-submenu>.el-submenu__title .lay-svg-icon{
-         width: 1.15em;
-         height: 1.15em;
-         margin-left: 6px;
-         margin-right: 0px;
-         transition: width .3s, height .3s;
-       }
-     }
   }
    .lay-sider-dark{
      .lay-aside-children{

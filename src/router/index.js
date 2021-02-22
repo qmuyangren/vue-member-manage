@@ -12,7 +12,7 @@ import RouteView from '@/layouts/components/RouteView'
 
 Vue.use(VueRouter)
 
-// 保持树形导航，但必须保证每一个上级要有一个<router-view />
+// 保持树形导航，但必须保证每一个上级要有一个1<router-view />
 export function filterAsyncRoute(routes) {
   const res = []
   const loop = (routes, parentPath = '/') => {

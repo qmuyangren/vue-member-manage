@@ -119,6 +119,6 @@ export default [
   {
     'path': '/member',
     'name': 'member',
-    'meta': { title: '菜单1', 'icon': 'member' }
+    'meta': { title: '菜单1', 'icon': 'user' }
   }
 ]

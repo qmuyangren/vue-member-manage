@@ -45,11 +45,13 @@ export default {
     activeMenu() {
       const route = this.$route
       const { meta, path } = route
+
       // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
         return meta.activeMenu
       }
-      console.log('activeMenu', path)
+      console.log('activeMenu', meta)
+      // console.log('activeMenu', path)
       return path
     },
     isCollapse() {
@@ -125,6 +127,7 @@ export default {
       return newList
     },
     handleSelect: function(key, index) {
+      console.log(key, index)
       // var name = key
       // var id = this.$route.params.id
       // let path = ''

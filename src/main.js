@@ -28,7 +28,7 @@ Vue.use(globalUtil)
 Vue.config.productionTip = false
 
 /**
-*如果您不想使用模拟服务器1
+*如果您不想使用模拟服务器
 *你想使用MockJs来模拟api
 *你可以执行:mockXHR()
 *
